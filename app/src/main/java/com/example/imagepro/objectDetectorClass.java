@@ -127,9 +127,8 @@ public class objectDetectorClass {
         output_map.put(1,classes);
         output_map.put(2,scores);
 
-        // ara predir
+        // ara executem el objcet de les les entrades i sortides
         interpreter.runForMultipleInputsOutputs(input,output_map);
-        // Abans de veure aquest vídeo, si us plau, mireu els meus 2 vídeos anteriors
         // 1. Carregant el model tensorflow lite
         // 2. Objecte predictiu
         // En aquest vídeo dibuixarem caixes i l'etiquetarem amb el seu nom
@@ -160,11 +159,9 @@ public class objectDetectorClass {
 
         }
         //seleccioneu el dispositiu i executeu-lo
-
         // abans de tornar, gireu enrere -90 graus
         Core.flip(rotated_mat_image.t(),mat_image,0);
         return mat_image;
-        //Probar de rotar a 90*  appl123
     }
 
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
@@ -185,8 +182,6 @@ public class objectDetectorClass {
         bitmap.getPixels(intValues,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());
         int pixel=0;
 
-        // algun error
-        //Ara corre
 
         for (int i=0;i<size_images;++i){
             for (int j=0;j<size_images;++j){
