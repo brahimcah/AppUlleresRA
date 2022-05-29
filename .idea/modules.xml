@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ImagePro.iml" filepath="$PROJECT_DIR$/.idea/modules/ImagePro.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ImagePro.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ImagePro.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ImagePro.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ImagePro.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ImagePro.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ImagePro.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ImagePro.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ImagePro.app.unitTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.iml" filepath="$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.main.iml" filepath="$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/openCVLibrary3413/ImagePro.openCVLibrary3413.unitTest.iml" />
+    </modules>
+  </component>
+</project>

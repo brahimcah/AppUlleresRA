@@ -29,9 +29,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class objectDetectorClass {
-    // should start from small letter
+    // hauria de començar amb lletra minúscula
 
-    // this is used to load model and predict
+    // s'utilitza per carregar el model i predir
     private Interpreter interpreter;
     // store all label in array
     private List<String> labelList;
