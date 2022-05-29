@@ -1,4 +1,4 @@
-package com.example.imagepro;
+package com.example.UlleresRealitatRa;
 
 import org.junit.Test;
 

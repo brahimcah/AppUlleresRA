@@ -1,10 +1,9 @@
-package com.example.imagepro;
+package com.example.UlleresRealitatRa;
 
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 
-import org.checkerframework.checker.units.qual.A;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -15,7 +14,6 @@ import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.gpu.GpuDelegate;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -50,8 +48,10 @@ public class objectDetectorClass {
         Interpreter.Options options=new Interpreter.Options();
         gpuDelegate=new GpuDelegate();
         options.addDelegate(gpuDelegate);
-        options.setNumThreads(4); //configura-ho segons el teu telèfon
-        // càrrega de model 
+        options.setNumThreads(4);
+
+        //Crear un objecte interpret
+
         interpreter=new Interpreter(loadModelFile(assetManager,modelPath),options);
         // carrega  labelmap
         labelList=loadLabelList(assetManager,labelPath);

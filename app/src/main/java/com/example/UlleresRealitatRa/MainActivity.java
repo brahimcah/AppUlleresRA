@@ -1,4 +1,4 @@
-package com.example.imagepro;
+package com.example.UlleresRealitatRa;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,8 +9,6 @@ import android.view.View;
 import android.widget.Button;
 
 import org.opencv.android.OpenCVLoader;
-
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     static {
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         camera_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Al clicar en el boto ens enviara al Layout CameraActivity
                 startActivity(new Intent(MainActivity.this,CameraActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         });
