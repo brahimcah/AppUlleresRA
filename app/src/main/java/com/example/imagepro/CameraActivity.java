@@ -60,7 +60,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         int MY_PERMISSIONS_REQUEST_CAMERA=0;
-        // if camera permission is not given it will ask for it on device
+        // si no es dóna permís a la càmera, el demanarà al dispositiu
         if (ContextCompat.checkSelfPermission(CameraActivity.this, Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED){
             ActivityCompat.requestPermissions(CameraActivity.this, new String[] {Manifest.permission.CAMERA}, MY_PERMISSIONS_REQUEST_CAMERA);
@@ -72,7 +72,7 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         try{
-            // input size is 300 for this model
+            // la mida d'entrada és 300 per a aquest model
             objectDetectorClass=new objectDetectorClass(getAssets(),"ssd_mobilenet.tflite","labelmap.txt",300);
             Log.d("MainActivity","Model is successfully loaded");
         }catch (IOException e){
@@ -85,13 +85,13 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
     protected void onResume() {
         super.onResume();
         if (OpenCVLoader.initDebug()){
-            //if load success
+            //si la càrrega és correcta
             Log.d(TAG,"Opencv initialization is done");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
 
         }
         else{
-            //if not loaded
+            //si la càrrega no és correcta
             Log.d(TAG,"Opencv is not loaded. try again");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_4_0,this,mLoaderCallback);
         }
@@ -123,9 +123,8 @@ public class CameraActivity extends Activity implements CameraBridgeViewBase.CvC
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame){
         mRgba=inputFrame.rgba();
         mGray=inputFrame.gray();
-        // Before watching this video please watch previous video of loading tensorflow lite model
 
-        // now call that function
+        // aqui crida aquesta funció
         Mat out=new Mat();
         out=objectDetectorClass.recognizeImage(mRgba);
 
