@@ -33,39 +33,39 @@ public class objectDetectorClass {
 
     // s'utilitza per carregar el model i predir
     private Interpreter interpreter;
-    // store all label in array
+    // emmagatzemar totes les etiquetes en matriu
     private List<String> labelList;
     private int INPUT_SIZE;
-    private int PIXEL_SIZE=3; // for RGB
+    private int PIXEL_SIZE=3; // per RGB
     private int IMAGE_MEAN=0;
     private  float IMAGE_STD=255.0f;
-    // use to initialize gpu in app
+    // utilitzar per inicialitzar la gpu a l'aplicació
     private GpuDelegate gpuDelegate;
     private int height=0;
     private  int width=0;
 
     objectDetectorClass(AssetManager assetManager,String modelPath, String labelPath,int inputSize) throws IOException{
         INPUT_SIZE=inputSize;
-        // use to define gpu or cpu // no. of threads
+        //utilitzar per definir gpu o CPU     no de fils
         Interpreter.Options options=new Interpreter.Options();
         gpuDelegate=new GpuDelegate();
         options.addDelegate(gpuDelegate);
-        options.setNumThreads(4); // set it according to your phone
-        // loading model
+        options.setNumThreads(4); //configura-ho segons el teu telèfon
+        // càrrega de model 
         interpreter=new Interpreter(loadModelFile(assetManager,modelPath),options);
-        // load labelmap
+        // carrega  labelmap
         labelList=loadLabelList(assetManager,labelPath);
 
 
     }
 
     private List<String> loadLabelList(AssetManager assetManager, String labelPath) throws IOException {
-        // to store label
+        // per guardar l'etiqueta
         List<String> labelList=new ArrayList<>();
-        // create a new reader
+        // crear un nou lector
         BufferedReader reader=new BufferedReader(new InputStreamReader(assetManager.open(labelPath)));
         String line;
-        // loop through each line and store it to labelList
+        // recorre cada línia i emmagatzema-la a labelList
         while ((line=reader.readLine())!=null){
             labelList.add(line);
         }
@@ -74,7 +74,7 @@ public class objectDetectorClass {
     }
 
     private ByteBuffer loadModelFile(AssetManager assetManager, String modelPath) throws IOException {
-        // use to get description of file
+        // utilitzar per obtenir la descripció del fitxer
         AssetFileDescriptor fileDescriptor=assetManager.openFd(modelPath);
         FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
         FileChannel fileChannel=inputStream.getChannel();
@@ -83,94 +83,94 @@ public class objectDetectorClass {
 
         return fileChannel.map(FileChannel.MapMode.READ_ONLY,startOffset,declaredLength);
     }
-    // create new Mat function
+    // crear una nova funció Mat
     public Mat recognizeImage(Mat mat_image){
-        // Rotate original image by 90 degree get get portrait frame
+        // Gira la imatge original 90 graus per obtenir un marc retrat
         Mat rotated_mat_image=new Mat();
         Core.flip(mat_image.t(),rotated_mat_image,1);
-        // if you do not do this process you will get improper prediction, less no. of object
-        // now convert it to bitmap
+        // si no feu aquest procés obtindreu una predicció incorrecta, menys no. d'objecte
+        // ara el converteix en bitmap
         Bitmap bitmap=null;
         bitmap=Bitmap.createBitmap(rotated_mat_image.cols(),rotated_mat_image.rows(),Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(rotated_mat_image,bitmap);
-        // define height and width
+        // defineix l'alçada i l'amplada
         height=bitmap.getHeight();
         width=bitmap.getWidth();
 
-        // scale the bitmap to input size of model
+        // escala el bitmap  a la mida d'entrada del model
          Bitmap scaledBitmap=Bitmap.createScaledBitmap(bitmap,INPUT_SIZE,INPUT_SIZE,false);
 
-         // convert bitmap to bytebuffer as model input should be in it
+         // convertir el bitmap a bytebuffer ja que l'entrada del model hi hauria d'estar
         ByteBuffer byteBuffer=convertBitmapToByteBuffer(scaledBitmap);
 
-        // defining output
-        // 10: top 10 object detected
-        // 4: there coordinate in image
-      //  float[][][]result=new float[1][10][4];
+        //definició de sortida
+        // 10: s'han detectat els 10 principals objectes
+        // 4: hi ha coordenades a la imatge
+        // flotant[][][]resultat=nou flotant[1][10][4];
         Object[] input=new Object[1];
         input[0]=byteBuffer;
 
         Map<Integer,Object> output_map=new TreeMap<>();
-        // we are not going to use this method of output
-        // instead we create treemap of three array (boxes,score,classes)
+        // no utilitzarem aquest mètode de sortida
+        // en lloc d'això, creem un treemap  de tres matrius (caixes, puntuació, classes)
 
         float[][][]boxes =new float[1][10][4];
-        // 10: top 10 object detected
-        // 4: there coordinate in image
+        // 10: s'han detectat els 10 principals objectes
+        // 4: hi ha coordenades a la imatge
         float[][] scores=new float[1][10];
-        // stores scores of 10 object
+        // emmagatzema puntuacions de 10 objectes
         float[][] classes=new float[1][10];
-        // stores class of object
+        // emmagatzema classe d'objecte
 
-        // add it to object_map;
+        // afegeix-ho a object_map;
         output_map.put(0,boxes);
         output_map.put(1,classes);
         output_map.put(2,scores);
 
-        // now predict
+        // ara predir
         interpreter.runForMultipleInputsOutputs(input,output_map);
-        // Before watching this video please watch my previous 2 video of
-        //      1. Loading tensorflow lite model
-        //      2. Predicting object
-        // In this video we will draw boxes and label it with it's name
+        // Abans de veure aquest vídeo, si us plau, mireu els meus 2 vídeos anteriors
+        // 1. Carregant el model tensorflow lite
+        // 2. Objecte predictiu
+        // En aquest vídeo dibuixarem caixes i l'etiquetarem amb el seu nom
 
         Object value=output_map.get(0);
         Object Object_class=output_map.get(1);
         Object score=output_map.get(2);
 
-        // loop through each object
-        // as output has only 10 boxes
+        // recorre cada objecte
+        // com a sortida només té 10 caixes
         for (int i=0;i<10;i++){
             float class_value=(float) Array.get(Array.get(Object_class,0),i);
             float score_value=(float) Array.get(Array.get(score,0),i);
-            // define threshold for score
+            // definir el llindar de puntuació
             if(score_value>0.5){
                 Object box1=Array.get(Array.get(value,0),i);
-                // we are multiplying it with Original height and width of frame
+                // ho estem multiplicant amb l'alçada i l'amplada del marc originals
 
                 float top=(float) Array.get(box1,0)*height;
                 float left=(float) Array.get(box1,1)*width;
                 float bottom=(float) Array.get(box1,2)*height;
                 float right=(float) Array.get(box1,3)*width;
-                // draw rectangle in Original frame //  starting point    // ending point of box  // color of box       thickness
+                //// dibuixa un rectangle al marc original // punt inicial // punt final de la caixa // color del gruix de la caixa
                 Imgproc.rectangle(rotated_mat_image,new Point(left,top),new Point(right,bottom),new Scalar(0, 255, 0, 255),2);
-                // write text on frame
-                                                // string of class name of object  // starting point                         // color of text           // size of text
+                // escriure text al marc // cadena de nom de classe de l'objecte // punt de partida // color del text // mida del text
                 Imgproc.putText(rotated_mat_image,labelList.get((int) class_value),new Point(left,top),3,1,new Scalar(255, 0, 0, 255),2);
             }
 
         }
-        // select device and run
+        //seleccioneu el dispositiu i executeu-lo
 
-        // before returning rotate back by -90 degree
+        // abans de tornar, gireu enrere -90 graus
         Core.flip(rotated_mat_image.t(),mat_image,0);
         return mat_image;
+        //Probar de rotar a 90*  appl123
     }
 
     private ByteBuffer convertBitmapToByteBuffer(Bitmap bitmap) {
         ByteBuffer byteBuffer;
-        // some model input should be quant=0  for some quant=1
-        // for this quant=0
+        //alguna entrada del model hauria de ser quant=0 per a un quant=1
+        // per a aquest quant=0
 
         int quant=0;
         int size_images=INPUT_SIZE;
@@ -185,8 +185,9 @@ public class objectDetectorClass {
         bitmap.getPixels(intValues,0,bitmap.getWidth(),0,0,bitmap.getWidth(),bitmap.getHeight());
         int pixel=0;
 
-        // some error
-        //now run
+        // algun error
+        //Ara corre
+
         for (int i=0;i<size_images;++i){
             for (int j=0;j<size_images;++j){
                 final  int val=intValues[pixel++];
@@ -196,7 +197,6 @@ public class objectDetectorClass {
                     byteBuffer.put((byte) (val&0xFF));
                 }
                 else {
-                    // paste this
                     byteBuffer.putFloat((((val >> 16) & 0xFF))/255.0f);
                     byteBuffer.putFloat((((val >> 8) & 0xFF))/255.0f);
                     byteBuffer.putFloat((((val) & 0xFF))/255.0f);
@@ -206,5 +206,3 @@ public class objectDetectorClass {
     return byteBuffer;
     }
 }
-// Next video is about drawing box and labeling it
-// If you have any problem please inform me
